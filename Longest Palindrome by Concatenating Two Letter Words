@@ -1,0 +1,42 @@
+LEETCODE POTD- 25/05/2025
+
+PROBLEM: 
+You are given an array of strings words. Each element of words consists of two lowercase English letters.
+
+Create the longest possible palindrome by selecting some elements from words and concatenating them in any order. Each element can be selected at most once.
+
+Return the length of the longest palindrome that you can create. If it is impossible to create any palindrome, return 0.
+
+A palindrome is a string that reads the same forward and backward.
+
+EXPLANATION:
+  1. To make our string palindrome, if we are taking a pair of characters then the reverse of it should also exist so that we can make it plaindrome,
+  2. So for the above purpose, we iterate though the array and check if the reverse of our current word exist, then we add 4(length contributed by the word and its palindrome) to the result. and decrease the frequncy of original word in hashmap.
+  3. If the reverse doesnt exist, then we will put the original word in the hashmap with its frequency 1.
+  4. at the end we will iterate though the hashmap to check if there is any palindromic word whose frequency>1, we will add 2 (length contributed by it to the result ) to the result, becuase we can add it in the middle of our palindromic string to increase its length keeping it palindromic.
+
+CODE:
+
+class Solution {
+    public int longestPalindrome(String[] words) {
+        int result=0;
+        HashMap<String , Integer> mp= new HashMap<>();
+        for(int i=0; i<words.length; i++){
+            String original= words[i];
+            String reversed= ""+original.charAt(1)+original.charAt(0);
+            if(mp.getOrDefault(reversed, 0) > 0){
+                result+=4;
+                mp.put(reversed, mp.get(reversed)-1);
+            }
+            else    mp.put(original, mp.getOrDefault(original,0)+1);
+        }
+        for(int i=0; i<words.length; i++){
+            String word= words[i];
+            if(word.charAt(0)== word.charAt(1) && mp.get(word)>0){
+                result+=2; 
+                break;
+            }  
+        }
+        return result;
+    }
+}
