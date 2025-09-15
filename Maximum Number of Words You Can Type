@@ -1,0 +1,31 @@
+PROBLEM STATEMENT:
+There is a malfunctioning keyboard where some letter keys do not work. All other keys on the keyboard work properly.
+
+Given a string text of words separated by a single space (no leading or trailing spaces) and a string brokenLetters of all distinct letter keys that are broken, return the number of words in text you can fully type using this keyboard.
+
+SOLUTION:
+
+                                                                                          TIME COMPLEXITY: O(B+N), B= length of brokenLetters, N= length of text
+                                                                                          SPACE COMPLEXITY: O(W), W=number of words
+
+class Solution {
+    public int canBeTypedWords(String text, String brokenLetters) {
+        boolean[] broken= new boolean[26];
+        int cnt=0;
+        for(int i=0; i<brokenLetters.length(); i++){
+            broken[brokenLetters.charAt(i)-'a']=true;
+        }
+        String[] words= text.split(" ");
+
+        for(int i=0; i<words.length ; i++){
+            String word= words[i];
+            for(int j=0; j<word.length(); j++){
+                if(broken[word.charAt(j)-'a']){
+                    cnt++;
+                    break;
+                }
+            }
+        }
+        return words.length-cnt;
+    }
+}
