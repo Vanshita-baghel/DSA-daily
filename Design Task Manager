@@ -1,0 +1,92 @@
+PROBLEM STATEMENT:
+There is a task management system that allows users to manage their tasks, each associated with a priority. The system should efficiently handle adding, modifying, executing, and removing tasks.
+
+Implement the TaskManager class:
+
+TaskManager(vector<vector<int>>& tasks) initializes the task manager with a list of user-task-priority triples. Each element in the input list is of the form [userId, taskId, priority], which adds a task to the specified user with the given priority.
+
+void add(int userId, int taskId, int priority) adds a task with the specified taskId and priority to the user with userId. It is guaranteed that taskId does not exist in the system.
+
+void edit(int taskId, int newPriority) updates the priority of the existing taskId to newPriority. It is guaranteed that taskId exists in the system.
+
+void rmv(int taskId) removes the task identified by taskId from the system. It is guaranteed that taskId exists in the system.
+
+int execTop() executes the task with the highest priority across all users. If there are multiple tasks with the same highest priority, execute the one with the highest taskId. After executing, the taskId is removed from the system. Return the userId associated with the executed task. If no tasks are available, return -1.
+
+Note that a user may be assigned multiple tasks.
+
+SOLUTION:
+
+import java.util.*;
+class TaskManager {
+
+    Map<Integer, TaskInfo> taskMap= new HashMap<>();    //taskId, TaskInfo
+
+    TreeSet<TaskInfo> priorityMap= null;   //priority, taskid, userid
+
+    public TaskManager(List<List<Integer>> tasks) {
+        Comparator<TaskInfo> comparator= (a,b)->{
+            if(a.priority != b.priority){
+                return b.priority-a.priority;
+            }
+            else{
+                return b.taskId-a.taskId;
+            }
+        };
+        priorityMap= new TreeSet<>(comparator);  
+        for(List<Integer> task: tasks){
+            int uid= task.get(0);
+            int taskId= task.get(1);
+            int priority= task.get(2);
+            taskMap.put(taskId, new TaskInfo(priority,taskId, uid));
+            priorityMap.add(new TaskInfo(priority, taskId, uid));
+        }
+    }
+    
+    public void add(int userId, int taskId, int priority) {     // O(log n)
+        taskMap.put(taskId, new TaskInfo(priority, taskId, userId));  //O(1)
+        priorityMap.add(new TaskInfo(priority, taskId, userId));      //O(logn)
+    }
+    
+    public void edit(int taskId, int newPriority) {        //O(log n)
+        TaskInfo oldTask= taskMap.get(taskId);
+        if(oldTask!=null){
+            priorityMap.remove(oldTask);            //O(logn)
+            oldTask.priority= newPriority;
+            taskMap.put(taskId, oldTask);            //O(1)
+            priorityMap.add(oldTask);                //O(logn)
+        }
+
+    }
+    
+    public void rmv(int taskId) {                          //O(logn)
+        TaskInfo oldTask= taskMap.get(taskId);
+        if(oldTask!=null)   priorityMap.remove(oldTask);        //O(logn)
+    
+    public int execTop() {                          //O(log n)
+        if(priorityMap.isEmpty())   return -1;
+        TaskInfo task= priorityMap.pollFirst();
+        taskMap.remove(task.taskId);
+        priorityMap.remove(task);
+        return task.uid;
+    }
+}
+class TaskInfo{
+    int priority;
+    int taskId;
+    int uid;
+    TaskInfo(int priority,int taskId, int uid){
+        this.taskId= taskId;
+        this.uid= uid;
+        this.priority= priority;
+    }
+}
+
+/**
+ * Your TaskManager object will be instantiated and called as such:
+ * TaskManager obj = new TaskManager(tasks);
+ * obj.add(userId,taskId,priority);
+ * obj.edit(taskId,newPriority);
+ * obj.rmv(taskId);
+ * int param_4 = obj.execTop();
+ */
