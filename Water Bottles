@@ -1,0 +1,50 @@
+PROBLEM STATEMENT:
+ There are numBottles water bottles that are initially full of water. You can exchange numExchange empty water bottles from the market with one full water bottle.
+
+The operation of drinking a full water bottle turns it into an empty bottle.
+
+Given the two integers numBottles and numExchange, return the maximum number of water bottles you can drink.
+
+SOLUTION:
+
+                                                                                          APPROACH 1: 
+                                                                                          TIME COMPLEXITY: O(numBottles)
+                                                                                          SPACE COMPLEXITY: O(numBottles)
+class Solution {
+    public int numWaterBottles(int numBottles, int numExchange) {
+        return f(numBottles, 0, numExchange);
+    }
+
+    public int f(int f, int e, int n){
+        if(f+e < n) return f;
+        int nf=0;
+        int ne=0;
+        if(f>=n){
+            nf= f/n;
+            ne= (f%n) + e;
+        }
+        else{
+            nf= 1;
+            ne= e - (n-f);
+        }
+        int op= f+ f(nf, ne, n);
+
+        return op;
+    }
+}
+
+
+                                                                                            APPROACH 2:
+                                                                                          TIME COMPLEXITY: O(1)
+                                                                                          SPACE COMPLEXITY: O(1)
+
+
+
+class Solution {
+    public int numWaterBottles(int numBottles, int numExchange) {
+        
+        return numBottles + (numBottles-1)/(numExchange-1);
+    }
+
+    
+}
