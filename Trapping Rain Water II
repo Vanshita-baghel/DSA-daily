@@ -1,0 +1,69 @@
+PROBLEM STATEMENT:
+Given an m x n integer matrix heightMap representing the height of each unit cell in a 2D elevation map, return the volume of water it can trap after raining.
+
+SOLUTION:
+
+                                                                                            TIME COMPLEXITY: O(mn. log(mn))
+                                                                                            SPACE COMPLEXITY: O(mn)
+            
+class Solution {
+    public int trapRainWater(int[][] heightMap) {
+        
+        int m= heightMap.length;
+        int n= heightMap[0].length;
+
+        //min heap
+        PriorityQueue<Info> pq= new PriorityQueue<>(
+            (a,b)-> a.val - b.val
+        );
+
+        boolean[][] visited= new boolean[m][n];
+
+        for(int i=0; i<m; i++){
+            pq.add(new Info(heightMap[i][0], i, 0));
+            visited[i][0]= true;
+
+            pq.add(new Info(heightMap[i][n-1], i, n-1));
+            visited[i][n-1]= true;
+        }
+        for(int i=0; i<n; i++){
+            pq.add(new Info(heightMap[0][i], 0, i));
+            visited[0][i]= true;
+
+            pq.add(new Info(heightMap[m-1][i], m-1, i));
+            visited[m-1][i]= true;
+        }
+
+        int[][] dir= {{0,1},{1,0},{0,-1},{-1, 0}};
+        int water=0;
+        while(!pq.isEmpty()){
+            Info cell= pq.poll();
+            int curRow= cell.r;
+            int curCol= cell.c;
+
+            for(int i=0; i<4; i++){
+
+                int adjRow= curRow+ dir[i][0];
+                int adjCol= curCol+ dir[i][1];
+
+                if(adjRow>=0 && adjRow<m && adjCol>=0 && adjCol<n && !visited[adjRow][adjCol]){
+                    water+= Math.max(cell.val-heightMap[adjRow][adjCol], 0);
+                    visited[adjRow][adjCol]=true;
+                    pq.add(new Info(Math.max(heightMap[adjRow][adjCol], cell.val ), adjRow, adjCol));
+                }
+            }
+        }
+        return water;
+    }
+
+}
+class Info{
+    int val;
+    int r;
+    int c;
+    Info(int val, int r, int c){
+        this.val= val;
+        this.r= r;
+        this.c= c;
+    }
+}
