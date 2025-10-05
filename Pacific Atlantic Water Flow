@@ -1,0 +1,80 @@
+PROBLEM STATEMENT:
+
+There is an m x n rectangular island that borders both the Pacific Ocean and Atlantic Ocean. The Pacific Ocean touches the island's left and top edges, and the Atlantic Ocean touches the island's right and bottom edges.
+
+The island is partitioned into a grid of square cells. You are given an m x n integer matrix heights where heights[r][c] represents the height above sea level of the cell at coordinate (r, c).
+
+The island receives a lot of rain, and the rain water can flow to neighboring cells directly north, south, east, and west if the neighboring cell's height is less than or equal to the current cell's height. Water can flow from any cell adjacent to an ocean into the ocean.
+
+Return a 2D list of grid coordinates result where result[i] = [ri, ci] denotes that rain water can flow from cell (ri, ci) to both the Pacific and Atlantic oceans
+
+SOLUTION:
+
+                                                                                                TIME COMPLEXITY: O(m*n)
+                                                                                                SPACE COMPELXITY: O(m*n)
+
+class Solution {
+    public List<List<Integer>> pacificAtlantic(int[][] heights) {
+        int m= heights.length;
+        int n= heights[0].length;
+
+        boolean[][] P_set= new boolean[m][n];
+        for(int i=0; i<n; i++){
+            if(!P_set[0][i]){
+                bfs(0,i,P_set, heights);
+            }
+        }
+        for(int i=0; i<m; i++){
+            if(!P_set[i][0]){
+                bfs(i,0,P_set, heights);
+            }
+        }
+
+        boolean[][] A_set= new boolean[m][n];
+        for(int i=0; i<n; i++){
+            if(!A_set[m-1][i]){
+                bfs(m-1,i,A_set, heights);
+            }
+        }
+        for(int i=0; i<m; i++){
+            if(!A_set[i][n-1]){
+                bfs(i,n-1,A_set, heights);
+            }
+        }
+
+        List<List<Integer>> result= new ArrayList<>();
+
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++){
+                if(P_set[i][j] && A_set[i][j]){
+                    List<Integer> newList= new ArrayList<>();
+                    newList.add(i);
+                    newList.add(j);
+                    result.add(newList);
+                }
+            }
+        }
+        return result;
+    }
+    public void bfs(int r, int c, boolean[][] vis, int[][] heights){
+        int m= heights.length;
+        int n= heights[0].length;
+        Queue<int[]> q= new LinkedList<>();
+        int[][] dir= {{0,1}, {1,0}, {-1,0}, {0,-1}};
+        q.add(new int[]{r,c});
+        vis[r][c]=true;
+        while(!q.isEmpty()){
+            int[] cur= q.poll();
+            int curRow= cur[0];
+            int curCol= cur[1];
+            for(int i=0; i<4; i++){
+                int adjRow= curRow+dir[i][0];
+                int adjCol= curCol + dir[i][1];
+                if(adjRow>=0 && adjRow<m && adjCol>=0 && adjCol<n&& heights[adjRow][adjCol]>=heights[curRow][curCol] && !vis[adjRow][adjCol]){
+                    q.add(new int[]{adjRow, adjCol});
+                    vis[adjRow][adjCol]= true;
+                }
+            }
+        }
+    }
+}
