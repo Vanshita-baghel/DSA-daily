@@ -1,0 +1,64 @@
+PROBLEM STATEMENT:
+
+You are given an n x n integer matrix grid where each value grid[i][j] represents the elevation at that point (i, j).
+
+It starts raining, and water gradually rises over time. At time t, the water level is t, meaning any cell with elevation less than equal to t is submerged or reachable.
+
+You can swim from a square to another 4-directionally adjacent square if and only if the elevation of both squares individually are at most t. You can swim infinite distances in zero time. Of course, you must stay within the boundaries of the grid during your swim.
+
+Return the minimum time until you can reach the bottom right square (n - 1, n - 1) if you start at the top left square (0, 0).
+
+SOLUTION:
+
+                                                                                            TIME COMPLEXITY: O(mn⋅log(mn))
+                                                                                            SPACE COMPLEXITY: O(mn)
+
+class Solution {
+    public int swimInWater(int[][] grid) {
+        int m= grid.length;
+        int n= grid[0].length;
+        PriorityQueue<Info> pq= new PriorityQueue<>(
+            (a,b)-> a.val-b.val
+        );
+        boolean[][] vis= new boolean[m][n];
+
+        pq.add(new Info(grid[0][0],0,0));
+        vis[0][0]=true;
+
+        int[][] dir= {{0,1}, {1,0}, {0,-1}, {-1,0}};
+
+        int time=0;
+
+        while(!pq.isEmpty()){
+            Info cur= pq.poll();
+            int curVal= cur.val;
+            int curRow= cur.r;
+            int curCol= cur.c;
+
+            time= Math.max(time, curVal);
+
+            if(curRow== m-1 && curCol==n-1) return time;
+
+            for(int i=0; i<4; i++){
+                int adjRow= curRow+ dir[i][0];
+                int adjCol= curCol+ dir[i][1];
+                if(adjRow>=0 && adjRow<m && adjCol>=0 && adjCol<n && !vis[adjRow][adjCol] ){
+                    vis[adjRow][adjCol]=true;
+                    pq.add(new Info(grid[adjRow][adjCol], adjRow, adjCol));
+                }
+            }
+
+        }
+        return -1;
+    }
+}
+class Info{
+    int val;
+    int r;
+    int c;
+    Info(int val, int r, int c){
+        this.val= val;
+        this.r=r;
+        this.c=c;
+    }
+}
