@@ -1,0 +1,57 @@
+PROBLEM STATEMENT:
+A magician has various spells.
+
+You are given an array power, where each element represents the damage of a spell. Multiple spells can have the same damage value.
+
+It is a known fact that if a magician decides to cast a spell with a damage of power[i], they cannot cast any spell with a damage of power[i] - 2, power[i] - 1, power[i] + 1, or power[i] + 2.
+
+Each spell can be cast only once.
+
+Return the maximum possible total damage that a magician can cast.
+
+SOLUTION:
+                                                                                            TIME COMPLEXITY: O(n logn)
+                                                                                            SPACE COMPLEXITY: O(m)
+
+class Solution {
+    public long maximumTotalDamage(int[] power) {
+
+        int n= power.length;
+        //frequency of each element
+        HashMap<Integer, Long> freqMap= new HashMap<>();
+        for(int num: power){
+            freqMap.put(num, freqMap.getOrDefault(num,0l)+1l);
+        }
+
+        //unique elements in nums
+        int[] nums= new int[freqMap.size()];
+        int ind=0;
+        for(Map.Entry<Integer, Long> e: freqMap.entrySet()){
+            nums[ind]= e.getKey();
+            ind++;
+        }
+
+        Arrays.sort(nums);
+
+        long[] dp= new long[nums.length];
+
+        Arrays.fill(dp, -1l);
+
+        return solve(nums,0, freqMap, dp);
+
+    }
+
+    public long solve(int[] nums, int i, HashMap<Integer, Long> freqMap, long[] dp){
+        if(i>=nums.length)  return 0;
+
+        if(dp[i] != -1)  return dp[i];
+
+        long notTake= solve(nums, i+1, freqMap, dp);
+
+        int j= Arrays.binarySearch(nums, nums[i]+3);
+        if(j<0) j= -j-1;
+        long take= (nums[i]* freqMap.get(nums[i]))+solve(nums, j, freqMap, dp);
+
+        return dp[i]=Math.max(take, notTake);
+    }
+}
