@@ -1,0 +1,46 @@
+PROBLEM STATEMENT:
+You are given a 0-indexed string array words, where words[i] consists of lowercase English letters.
+
+In one operation, select any index i such that 0 < i < words.length and words[i - 1] and words[i] are anagrams, and delete words[i] from words. Keep performing this operation as long as you can select an index that satisfies the conditions.
+
+Return words after performing all operations. It can be shown that selecting the indices for each operation in any arbitrary order will lead to the same result.
+
+An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase using all the original letters exactly once. For example, "dacb" is an anagram of "abdc".
+
+SOLUTION:    
+                                                                                          TIME COMPLEXITY: O(n*m)
+                                                                                          SPACE COMPLEXITY: O(1)
+
+class Solution {
+    public List<String> removeAnagrams(String[] words) {
+        List<String> res= new ArrayList<>();
+
+        for(int i=words.length-1; i>0; i--){
+            if(!isAnagram(words[i-1],words[i])){
+                res.add(words[i]);
+            }
+        }
+        res.add(words[0]);
+
+        Collections.reverse(res);
+
+        return res;
+    }
+
+    public boolean isAnagram(String s1, String s2){
+        if(s1.length()!=s2.length())    return false;
+        int[] freq1= new int[26];   //for s1
+        int[] freq2= new int[26];   //for s2
+        for(int i=0; i<s1.length(); i++){
+            char ch1= s1.charAt(i);
+            char ch2= s2.charAt(i);
+            freq1[ch1-'a']++;
+            freq2[ch2-'a']++;
+        }
+
+        for(int i=0; i<26; i++){
+            if(freq1[i]!= freq2[i])     return false;
+        }   
+        return true;
+    }
+}
