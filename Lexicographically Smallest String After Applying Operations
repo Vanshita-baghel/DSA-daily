@@ -1,0 +1,74 @@
+PROBLEM STATEMNET:
+
+You are given a string s of even length consisting of digits from 0 to 9, and two integers a and b.
+
+You can apply either of the following two operations any number of times and in any order on s:
+
+Add a to all odd indices of s (0-indexed). Digits post 9 are cycled back to 0. For example, if s = "3456" and a = 5, s becomes "3951".
+Rotate s to the right by b positions. For example, if s = "3456" and b = 1, s becomes "6345".
+Return the lexicographically smallest string you can obtain by applying the above operations any number of times on s.
+
+A string a is lexicographically smaller than a string b (of the same length) if in the first position where a and b differ, string a has a letter that appears earlier in the alphabet than the corresponding letter in b. For example, "0158" is lexicographically smaller than "0190" because the first position they differ is at the third letter, and '5' comes before '9'.
+
+SOLUTION:
+
+                                                                                          TIME COMPLEXITY: O(n² × (10 / gcd(10, a)))
+                                                                                          SPACE COMPLEXITY: O(n² × (10 / gcd(10, a)))
+
+class Solution {
+    public String findLexSmallestString(String s, int a, int b) {
+        String smallest= s;
+        Set<String> set= new HashSet<>();
+        Queue<String> q= new LinkedList<>();
+
+        q.add(s);
+        set.add(s);
+
+        while(!q.isEmpty()){
+
+            String curr= q.poll();
+
+            if(curr.compareTo(smallest)<0){
+                smallest= curr;
+            }
+
+            String rotated= rotateByB(curr,b);
+            String updated= addOnOddPos(curr,a);
+
+
+            if(set.add(rotated)){
+                q.add(rotated);
+            }
+
+            if(set.add(updated)){
+                q.add(updated);
+            }
+        }
+
+        return smallest;
+
+    }
+
+    public String rotateByB(String s, int b){
+        int n=s.length();
+        b=b%n;
+        StringBuilder sb= new StringBuilder();
+        sb.append(s.substring(n-b));
+        sb.append(s.substring(0, n-b));
+
+        return sb.toString();
+    }
+
+    public String addOnOddPos(String s, int k){
+        StringBuilder sb= new StringBuilder();
+
+        for(int i=0; i<s.length(); i++){
+            if(i%2 != 0){
+                sb.append((char)((((s.charAt(i)-'0')+k)%10)+'0'));
+            }
+            else    sb.append(s.charAt(i));
+        }
+
+        return sb.toString();
+    }
+}
