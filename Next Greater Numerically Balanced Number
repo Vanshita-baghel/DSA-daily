@@ -1,0 +1,60 @@
+PROBLEM STATEMENT:
+
+An integer x is numerically balanced if for every digit d in the number x, there are exactly d occurrences of that digit in x.
+
+Given an integer n, return the smallest numerically balanced number strictly greater than n.
+
+SOLUTION:
+
+                                                                                  TIME COMPLEXITY: O(k×k!+mlogm),   m = total unique permutations 
+                                                                                  SPACE COMPLEXITY: O(m+k) ,         k ≤ 7
+
+class Solution {
+    public int nextBeautifulNumber(int n) {
+        Set<Integer> set= new HashSet<>();
+
+        set.addAll(Arrays.asList(1, 22, 122, 333, 1333, 4444, 55555, 14444, 22333, 122333, 444422, 555551, 666666, 1224444, 1666666, 3334444, 2255555, 7777777));
+
+        Set<Integer> set2= new HashSet<>();
+        for(int el: set){
+            addAllPermutations(set2, el);
+        }
+
+        List<Integer> list= new ArrayList<>(set2);
+        Collections.sort(list);
+
+        for(int val: list){
+            if(val>n)   return val;
+        }
+
+        return -1;
+
+    }
+
+    public void addAllPermutations(Set<Integer> set, int n){
+        char[] arr= String.valueOf(n).toCharArray();
+
+        permute(arr, 0, set);
+
+    }
+
+    public void permute(char[] arr, int idx, Set<Integer> set){
+        if(idx==arr.length){
+            set.add(Integer.parseInt(new String(arr)));
+            return;
+        }
+
+        for(int i= idx; i< arr.length; i++){
+            swap(i, idx, arr);
+            permute(arr, idx+1, set);
+            swap(i, idx, arr);
+        }
+
+    }
+
+    public void swap(int i, int idx, char[] arr){
+        char temp= arr[i];
+        arr[i]= arr[idx];
+        arr[idx]= temp;
+    }
+}
