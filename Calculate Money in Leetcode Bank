@@ -1,0 +1,64 @@
+PROBLEM STATEMENT:
+
+Hercy wants to save money for his first car. He puts money in the Leetcode bank every day.
+
+He starts by putting in $1 on Monday, the first day. Every day from Tuesday to Sunday, he will put in $1 more than the day before. On every subsequent Monday, he will put in $1 more than the previous Monday.
+
+Given n, return the total amount of money he will have in the Leetcode bank at the end of the nth day.
+
+SOLUTION:
+
+                                                                                        TIME COMPLEXITY: O(1)
+                                                                                        SPACE COMPLEXITY: O(1)
+
+class Solution {
+    //Math solution
+    public int totalMoney(int n) {
+        
+        int weeks= n/7, days=n%7;
+
+        int F=28, L= 28+(weeks-1)*7;
+
+        int weekSum= weeks* (F+L)/2;
+
+
+        int lastMonday= (1+weeks);
+        
+        int lastDay= lastMonday+days-1;
+
+        int daysSum= (days*(lastMonday+lastDay))/2;             //sum of n terms= (n*(a+l))/2
+
+        return weekSum+daysSum;
+
+    }
+}
+
+                                                                                    TIME COMPLEXITY: O(n)
+                                                                                    SPACE COMPLEXITY: O(1)
+
+class Solution {
+    public int totalMoney(int n) {
+        int amt=0;
+
+        int weeks= n/7, days= n%7;
+
+        int lastWeek=0;
+
+        int i=1;
+
+        while(i<=weeks){
+            for(int j=1; j<=7; j++){
+                amt+= (lastWeek+j);
+            }
+            lastWeek++;
+            i++;
+        }   
+
+        for(int k=1; k<=days; k++){
+            amt+= (lastWeek+k);
+        }     
+
+
+        return amt;
+    }
+}
