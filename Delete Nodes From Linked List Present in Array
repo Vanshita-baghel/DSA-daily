@@ -1,0 +1,44 @@
+PROBLEM STATEMENT:
+You are given an array of integers nums and the head of a linked list. Return the head of the modified linked list after removing all nodes from the linked list that have a value that exists in nums.
+
+SOLUTION:
+
+                                                                                          TIME COMPLEXITY: O(m+n)
+                                                                                          SPACE COMPLEXITY: O(m)
+  
+class Solution {
+    public ListNode modifiedList(int[] nums, ListNode head) {
+        Set<Integer> set= new HashSet<>();
+        for(int i=0; i<nums.length; i++){
+            set.add(nums[i]);
+        }
+
+        ListNode prev=null;
+        ListNode cur= head;
+        ListNode temp= cur.next;
+        while(cur!=null){
+            if(set.contains(cur.val)){
+                //node to be deleted
+                if(prev!=null){
+                    //this is not head node
+                    prev.next= temp;
+                    cur= temp;
+                    temp= (temp!=null)?temp.next: null;
+                }
+                else{
+                    //this is head node
+                    cur= temp;
+                    head= cur;
+                    temp= (temp!=null)?temp.next: null;
+                }
+            }
+            else{
+                //node not to be deleted
+                prev= cur;
+                cur= temp;
+                temp= (temp!=null)?temp.next: null;
+            }
+        }
+        return head;
+    }
+}
