@@ -1,0 +1,44 @@
+PROBLEM STATEMENT:
+You are given two integers m and n representing a 0-indexed m x n grid. You are also given two 2D integer arrays guards and walls where guards[i] = [rowi, coli] and walls[j] = [rowj, colj] represent the positions of the ith guard and jth wall respectively.
+
+A guard can see every cell in the four cardinal directions (north, east, south, or west) starting from their position unless obstructed by a wall or another guard. A cell is guarded if there is at least one guard that can see it.
+
+Return the number of unoccupied cells that are not guarded.
+
+ SOLUTION:
+
+                                                                                                    TIME COMPLEXITY: O(m*n)
+                                                                                                    SPACE COMPLEXITY: O(m*n)
+
+class Solution {
+    public int countUnguarded(int m, int n, int[][] guards, int[][] walls) {
+        int[][] grid= new int[m][n];
+
+        for(int[] w: walls){        //wall ---> -1
+            grid[w[0]][w[1]]= -1;
+        }
+        for(int[] g: guards){
+            grid[g[0]][g[1]]=-2;    //guard --> -2
+        }
+
+        int[][] dir= {{0,1}, {1,0}, {0,-1}, {-1,0}};
+        for(int[] g: guards){
+            for(int[] d: dir){
+                int r= g[0]+d[0], c=g[1]+d[1];
+                while(r>=0 && r<m && c>=0 && c<n && grid[r][c]!=-1 && grid[r][c]!=-2){
+                    if(grid[r][c]==0)  grid[r][c]=-3;
+                    r+= d[0];
+                    c+= d[1];
+                }
+            }
+        }
+        int cnt=0;
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++){
+                if(grid[i][j]==0)   cnt++;
+            }
+        }
+
+        return cnt;
+    }
+}
