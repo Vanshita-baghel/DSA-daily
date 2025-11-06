@@ -1,0 +1,95 @@
+PROBLEM STATEMENT:
+You are given an integer c representing c power stations, each with a unique identifier id from 1 to c (1‑based indexing).
+
+These stations are interconnected via n bidirectional cables, represented by a 2D array connections, where each element connections[i] = [ui, vi] indicates a connection between station ui and station vi. Stations that are directly or indirectly connected form a power grid.
+
+Initially, all stations are online (operational).
+
+You are also given a 2D array queries, where each query is one of the following two types:
+
+[1, x]: A maintenance check is requested for station x. If station x is online, it resolves the check by itself. If station x is offline, the check is resolved by the operational station with the smallest id in the same power grid as x. If no operational station exists in that grid, return -1.
+
+[2, x]: Station x goes offline (i.e., it becomes non-operational).
+
+Return an array of integers representing the results of each query of type [1, x] in the order they appear.
+
+Note: The power grid preserves its structure; an offline (non‑operational) node remains part of its grid and taking it offline does not alter connectivity.
+
+SOLUTION:
+
+                                                                                          TIME COMPLEXITY: O(c+e + c logc+ q logc)
+                                                                                          SPACE COMPLEXITY:O(c+e)
+
+class Solution {
+    public int[] processQueries(int c, int[][] connections, int[][] queries) {
+        List<List<Integer>> adjList= new ArrayList<>();
+        for(int i=0; i<=c; i++){                // O(c)
+            adjList.add(new ArrayList<>());
+        }
+        for(int i=0; i<connections.length; i++){    //O(e)
+            int u= connections[i][0];
+            int v= connections[i][1];
+            adjList.get(u).add(v);
+            adjList.get(v).add(u);
+        }
+
+        //finding the grid id for each station
+        int[] visited= new int[c+1];
+        int[] gridId= new int[c+1];
+        int gridCnt=0;
+        for(int i=1; i<=c; i++){
+            if(visited[i]==0){
+                gridCnt++;
+                dfs(i, visited, adjList, gridId, gridCnt);     // O(c+e)
+            }
+        }
+
+        boolean[] online= new boolean[c+1];
+        Arrays.fill(online, true);
+
+        List<PriorityQueue<Integer>> grids= new ArrayList<>();
+
+        for(int i=0; i<=gridCnt; i++){
+            grids.add(new PriorityQueue<>());
+        }
+
+        for(int i=1; i<=c; i++){
+            grids.get(gridId[i]).add(i);        //O(c logc)
+        }
+
+        List<Integer> ans= new ArrayList<>();
+
+        // now iterate  on queries
+        for(int[] query: queries){
+            int op= query[0], station= query[1];
+            if(op==2){                                          //O(1)
+                online[station]= false;
+            }
+            else{
+                //query
+                
+                PriorityQueue<Integer> pq= grids.get(gridId[station]);
+                while(!pq.isEmpty() && !online[pq.peek()]){
+                    pq.poll();
+                }
+                if(online[station]) ans.add(station);
+                else if(!pq.isEmpty())  ans.add(pq.peek());
+                else{
+                    ans.add(-1);
+                }
+            }
+        }
+
+        return ans.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    public void dfs(int i, int[] visited, List<List<Integer>> adjList, int[] gridId, int gridCnt){
+        visited[i]=1;
+        gridId[i]= gridCnt;
+        for(int neighbour: adjList.get(i)){
+            if(visited[neighbour]==0){
+                dfs(neighbour, visited, adjList, gridId, gridCnt);
+            }
+        }
+    }
+}
