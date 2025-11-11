@@ -1,0 +1,51 @@
+PROBLEM STATEMENT:
+You are given an array of binary strings strs and two integers m and n.
+
+Return the size of the largest subset of strs such that there are at most m 0's and n 1's in the subset.
+
+A set x is a subset of a set y if all elements of x are also elements of y.
+
+
+SOLUTION:
+
+                                                                                TIME COMPELXTY: O(L*m*n)
+                                                                                SPACE COMPLEXIYT: O(L*m*n)
+
+class Solution {
+    public int findMaxForm(String[] strs, int m, int n) {
+
+        int[][][] dp= new int[strs.length][m+1][n+1];
+        
+
+        int res= f(0,m,n, strs, dp);
+        return res;
+    }
+    public int f(int i, int z, int o, String[] arr, int[][][] dp){
+        if(z==0 && o==0)    return 0;
+        if(z<0 || o<0)  return 0;
+        if(i==arr.length)  return 0;
+
+        if(dp[i][z][o]!= -1)    return dp[i][z][o];
+
+        int[] cntOf0and1= countZeroAndOne(arr[i]);
+        int noOfZero= cntOf0and1[0];
+        int noOfOne= cntOf0and1[1];
+        
+        int take=0;
+        if(noOfZero<=z && noOfOne<=o){
+            take= 1+f(i+1,z-noOfZero, o-noOfOne, arr, dp);
+        }
+        int notTake= f(i+1, z,o,arr, dp);
+
+        return dp[i][z][o]=Math.max(take, notTake);
+    }
+    public int[] countZeroAndOne(String s){
+        int cnt0=0, cnt1=0;
+        for(int i=0; i<s.length(); i++){
+            char ch= s.charAt(i);
+            if(ch=='0') cnt0++;
+            else    cnt1++;
+        }
+        return new int[]{cnt0, cnt1};
+    }
+}
