@@ -1,0 +1,58 @@
+PROBLEM STATEMENT:
+You are given a binary string s.
+
+You can perform the following operation on the string any number of times:
+
+Choose any index i from the string where i + 1 < s.length such that s[i] == '1' and s[i + 1] == '0'.
+Move the character s[i] to the right until it reaches the end of the string or another '1'. For example, for s = "010010", if we choose i = 1, the resulting string will be s = "000110".
+Return the maximum number of operations that you can perform.
+
+SOLUTION:
+
+                                                                                                      TIME COMPLEXITY: O(n)
+                                                                                                      SPACE COMPLEXITY: O(n)
+
+class Solution {
+    public int maxOperations(String s) {
+        
+        int n= s.length();
+        List<Integer> lengths= new ArrayList<>();
+
+        int i=0;
+        while(i<n-1){
+            char ch= s.charAt(i);
+            if(ch=='1'){
+                int j=i;
+                int len=0;
+                while(j<n-1 && s.charAt(j+1)!='0'){
+                    j++;
+                }
+                if(j<n-1){
+                    len= j-i+1;
+                    lengths.add(len);
+                }
+                
+                i=j+1;
+            }
+            else    i++;
+        }
+
+        int[] prefix= new int[lengths.size()];
+
+        if(lengths.size()>0){
+            
+            prefix[0]= lengths.get(0);
+            for(int k=1; k<lengths.size(); k++){
+                prefix[k]= lengths.get(k)+ prefix[k-1];
+            }
+        }
+        
+
+        int op=0;
+        for(int num: prefix){
+            op+= num;
+        }
+
+        return op;
+    }   
+}
