@@ -1,0 +1,29 @@
+PROBLEM STATEMENT:
+Given a binary string s, return the number of substrings with all characters 1's. Since the answer may be too large, return it modulo 109 + 7.
+
+SOLUTION:
+
+                                                                                                TIME COMPLEXITY: O(n)
+                                                                                                SPACE COMPLEXITY: O(1)
+
+class Solution {
+    int MOD= 1_000_000_007;
+    public int numSub(String s) {
+        int i=0, n=s.length();
+        int ans=0;
+
+        while(i<n){
+            char ch= s.charAt(i);
+            if(ch=='1'){
+                int j=i;
+                while(j+1<n && s.charAt(j+1)=='1')  j++;
+                long len= j-i+1;
+                ans+= ((len*(len+1))/2)%MOD;
+                i=j;
+            }
+            i++;
+        }
+
+        return ans;
+    }
+}
