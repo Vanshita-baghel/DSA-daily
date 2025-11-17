@@ -1,0 +1,27 @@
+PROBLEM STATEMENT:
+
+Given an binary array nums and an integer k, return true if all 1's are at least k places away from each other, otherwise return false.
+
+SOLUTION:
+
+                                                                                      TIME COMPLEXITY: O(n)
+                                                                                      SPACE COMPLEXITY: O(1)
+
+class Solution {
+    public boolean kLengthApart(int[] nums, int k) {
+        int i=0, n= nums.length;
+        while(i<n){
+            if(nums[i]==1){
+                int j=i+1;
+                while(j<n && nums[j]==0){
+                    j++;
+                }
+                int len= j-i+1;
+                if(j<n&& len-2<k) return false;
+                else    i=j;
+            }
+            else    i++;
+        }
+        return true;
+    }
+}
