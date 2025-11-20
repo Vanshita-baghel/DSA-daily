@@ -1,0 +1,42 @@
+PROBLEM STATEMENT:
+You are given a 2D integer array intervals where intervals[i] = [starti, endi] represents all the integers from starti to endi inclusively.
+
+A containing set is an array nums where each interval from intervals has at least two integers in nums.
+
+For example, if intervals = [[1,3], [3,7], [8,9]], then [1,2,4,7,8,9] and [2,3,4,8,9] are containing sets.
+Return the minimum possible size of a containing set.
+
+SOLUTION:
+
+                                                                                  TIME COMPLEXITY: O(n logn)
+                                                                                  SPACE COMPLEXITY: O(1)
+
+class Solution {
+    public int intersectionSizeTwo(int[][] intervals) {
+        Arrays.sort(intervals, (a,b)-> {
+            if(a[1]!=b[1])    return a[1]-b[1];        //end by ascending and strat by descending if ties
+            return b[0]- a[0];
+        });
+        int h1=intervals[0][1];
+        int h2= h1-1;
+        int ans=2;
+        int n= intervals.length;
+        for(int i=1; i<n; i++){
+            int start= intervals[i][0], end= intervals[i][1];
+            if(h2>=start)    continue;  //both are in the interval
+            if(h1>=start){
+                //only one point is present
+                ans+=1;
+                h2=h1;
+                h1=end;
+            }
+            else{
+                ans+=2;
+                h1=end;
+                h2=end-1;
+            }
+        }
+
+        return ans;
+    }
+}
