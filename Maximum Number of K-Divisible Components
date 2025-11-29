@@ -1,0 +1,46 @@
+PROBLEM STATEMENT:
+There is an undirected tree with n nodes labeled from 0 to n - 1. You are given the integer n and a 2D integer array edges of length n - 1, where edges[i] = [ai, bi] indicates that there is an edge between nodes ai and bi in the tree.
+
+You are also given a 0-indexed integer array values of length n, where values[i] is the value associated with the ith node, and an integer k.
+
+A valid split of the tree is obtained by removing any set of edges, possibly empty, from the tree such that the resulting components all have values that are divisible by k, where the value of a connected component is the sum of the values of its nodes.
+
+Return the maximum number of components in any valid split.
+
+SOLUTION:
+
+                                                                                                  TIME COMPLEXITY: O(n)
+                                                                                                  SPACE COMPLEXITY: O(n)
+
+class Solution {
+    int compCount=0;
+    public int maxKDivisibleComponents(int n, int[][] edges, int[] values, int k) {
+        List<List<Integer>> adjList= new ArrayList<>();
+        for(int i=0; i<n; i++){
+            adjList.add(new ArrayList<>());
+        }
+        for(int i=0; i<edges.length; i++){
+            int u= edges[i][0], v= edges[i][1];
+            adjList.get(u).add(v);
+            adjList.get(v).add(u);
+        }
+        dfs(0,-1, values, adjList, k);
+        return compCount;
+    }
+
+    public int dfs(int node, int parent, int[] values, List<List<Integer>> adjList, int k){
+        int sum= values[node];
+        for(int neighbour: adjList.get(node)){
+            if(neighbour== parent)  continue;
+            sum+= dfs(neighbour, node, values, adjList,k);
+        }
+
+        if(sum%k==0){
+            compCount++;
+            return 0;
+        }
+
+        return sum%k;
+    }
+
+}
