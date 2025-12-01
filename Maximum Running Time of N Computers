@@ -1,0 +1,81 @@
+PROBLEM STATEMENT:
+You have n computers. You are given the integer n and a 0-indexed integer array batteries where the ith battery can run a computer for batteries[i] minutes. You are interested in running all n computers simultaneously using the given batteries.
+
+Initially, you can insert at most one battery into each computer. After that and at any integer time moment, you can remove a battery from a computer and insert another battery any number of times. The inserted battery can be a totally new battery or a battery from another computer. You may assume that the removing and inserting processes take no time.
+
+Note that the batteries cannot be recharged.
+
+Return the maximum number of minutes you can run all the n computers simultaneously.
+
+SOLUTION:
+
+                                                                                            USING BINARY SEARCH
+                                                                                          TIME COMPLEXITY: O(n logn)
+                                                                                          SPACE COMPLEXITY: O(1)
+
+class Solution {
+    public long maxRunTime(int n, int[] batteries) {
+        long l=0;
+        long r= sum(batteries);
+
+        while(l<=r){
+            long mid= (l+r)/2l;
+            boolean temp= isPossible(batteries, mid, n);
+            if(!temp)    r=mid-1;
+            else    l=mid+1;
+        }
+        return r;
+    }
+
+    public boolean isPossible(int[] batteries, long mid, int n){
+        long total=0;
+        for(int battery: batteries){
+            total+= Math.min(battery, mid);
+        }
+        
+        System.out.println(mid);
+        if(total>= n*mid)   return true;
+        else    return false;
+
+    }
+
+    public long sum(int[] batteries){
+        long ans=0;
+        for(int i=0; i<batteries.length; i++){
+            ans+= batteries[i];
+        }
+        return ans;
+    }
+}
+
+
+                                                                          BRUTE FORCE(simulation)
+                                                                        TIME COMPLEXITY: (T*n*logm)
+                                                                        SPACE COMPLEXITY: O(1)
+class Solution {
+    public long maxRunTime(int n, int[] batteries) {
+        
+        PriorityQueue<Integer> pq= new PriorityQueue<>(
+            (a,b)-> b-a
+        );
+
+        for(int num: batteries){
+            pq.add(num);
+        }
+
+        int curMin=0;
+        while(pq.size()>= n){
+            //pop out max n elements and decrement them by one and push back non zeros back , increment curMin
+            List<Integer> maxBatteries=new ArrayList<>();
+            for(int i=0; i<n; i++){
+                maxBatteries.add(pq.poll()-1);
+            }
+            for(int i=0; i<n; i++){
+                if(maxBatteries.get(i)!=0)  pq.add(maxBatteries.get(i));
+            }
+            curMin++;
+        }
+
+        return curMin;
+    }
+}
