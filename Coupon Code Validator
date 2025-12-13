@@ -1,0 +1,55 @@
+PROBLEM STATEMENT:
+You are given three arrays of length n that describe the properties of n coupons: code, businessLine, and isActive. The ith coupon has:
+
+code[i]: a string representing the coupon identifier.
+businessLine[i]: a string denoting the business category of the coupon.
+isActive[i]: a boolean indicating whether the coupon is currently active.
+A coupon is considered valid if all of the following conditions hold:
+
+code[i] is non-empty and consists only of alphanumeric characters (a-z, A-Z, 0-9) and underscores (_).
+businessLine[i] is one of the following four categories: "electronics", "grocery", "pharmacy", "restaurant".
+isActive[i] is true.
+Return an array of the codes of all valid coupons, sorted first by their businessLine in the order: "electronics", "grocery", "pharmacy", "restaurant", and then by code in lexicographical (ascending) order within each category.
+
+SOLUTION:
+
+                                                                                      TIME COMPLEXITY: O(n logn)
+                                                                                      SPACE COMPLEXITY: O(n)
+
+class Solution {
+    public List<String> validateCoupons(String[] code, String[] businessLine, boolean[] isActive) {
+        PriorityQueue<String[]> pq= new PriorityQueue<>(
+            (a,b)->{
+                if((a[0].compareTo(b[0]))==0)  return a[1].compareTo(b[1]);
+                else    return a[0].compareTo(b[0]);
+            } 
+        );
+        int n= code.length;
+        for(int i=0; i<n; i++){
+            if(isAlphaNumeric(code[i]) && isValidBusiness(businessLine[i]) && isActive[i]){
+                pq.add(new String[]{businessLine[i], code[i]});
+            }
+        }
+        List<String> ans= new ArrayList<>();
+        while(!pq.isEmpty()){
+            String[] cur= pq.poll();
+            ans.add(cur[1]);
+        }
+
+        return ans;
+    }
+    public boolean isValidBusiness(String business){
+        if(business.equals("restaurant") || business.equals("grocery") || business.equals("pharmacy") || business.equals("electronics"))    return true;
+        return false;
+    }
+
+    public boolean isAlphaNumeric(String code){
+        if(code.length()==0)    return false;
+        for(int i=0; i<code.length(); i++){
+            char ch= code.charAt(i);
+            if((ch>='0' && ch<='9') || (ch>='a' && ch<='z') || (ch>='A' && ch<='Z') || ch=='_')    continue;
+            return false;
+        }
+        return true;
+    }
+}
