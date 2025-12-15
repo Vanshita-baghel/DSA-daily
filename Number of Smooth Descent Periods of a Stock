@@ -1,0 +1,35 @@
+PROBLEM STATEMENT:
+You are given an integer array prices representing the daily price history of a stock, where prices[i] is the stock price on the ith day.
+
+A smooth descent period of a stock consists of one or more contiguous days such that the price on each day is lower than the price on the preceding day by exactly 1. The first day of the period is exempted from this rule.
+
+Return the number of smooth descent periods
+
+SOLUTION:
+
+                                                                                          TIME COMPLEXITY: O(n)
+                                                                                          SPACE COMPLEXITY: O(1)
+
+class Solution {
+    public long getDescentPeriods(int[] prices) {
+        if(prices.length==1)    return 1;
+        int i=0, n= prices.length;
+        long ans=0l;
+        while(i<n){
+            if(i<n-1 && prices[i]-prices[i+1]==1 ){
+                int j=i+1;
+                while(j<n-1 && (prices[j]-prices[j+1]==1)){
+                    j++;
+                }
+                int len=j-i+1;
+                ans=(ans+ ((long)len*(long)(len+1))/2l);
+                i=j+1;
+            }
+            else{
+                ans= ans+1l;
+                i++;
+            }
+        }
+        return ans;
+    }
+}
