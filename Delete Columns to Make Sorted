@@ -1,0 +1,35 @@
+PROBLEM STATEMENT:
+You are given an array of n strings strs, all of the same length.
+
+The strings can be arranged such that there is one on each line, making a grid.
+
+For example, strs = ["abc", "bce", "cae"] can be arranged as follows:
+abc
+bce
+cae
+You want to delete the columns that are not sorted lexicographically. In the above example (0-indexed), columns 0 ('a', 'b', 'c') and 2 ('c', 'e', 'e') are sorted, while column 1 ('b', 'c', 'a') is not, so you would delete column 1.
+
+Return the number of columns that you will delete.
+
+SOLUTION:
+
+                                                                                      TIME COMPLEXITY: O(r*c)
+                                                                                      SPACE COMPLEXITY: O(1)
+
+class Solution {
+    public int minDeletionSize(String[] strs) {
+        int c= strs[0].length();
+        int cnt=0, r= strs.length;
+        for(int i=0; i<c; i++){
+            for(int j=0; j<r-1; j++){
+                String s1= strs[j], s2= strs[j+1];
+                int ch1= s1.charAt(i)-'a', ch2= s2.charAt(i)-'a';
+                if(ch1>ch2){
+                    cnt++;
+                    break;
+                }
+            }
+        }
+        return cnt;
+    }
+}
