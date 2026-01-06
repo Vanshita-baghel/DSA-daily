@@ -1,0 +1,39 @@
+Given the root of a binary tree, the level of its root is 1, the level of its children is 2, and so on.
+
+Return the smallest level x such that the sum of all the values of nodes at level x is maximal.
+
+
+SOLUTION:
+
+                                                                                        TIME COMPLEXITY: O(n)
+                                                                                        SPACE COMPLEXITY: O(n)
+                                                                                              USING BFS
+
+class Solution {
+    public int maxLevelSum(TreeNode root) {
+        Queue<TreeNode> q= new LinkedList<>();
+        q.add(root);
+        int maxiVal= root.val;
+        return bfs(root,q, 1,Long.MIN_VALUE);
+
+    }
+    public int bfs(TreeNode root, Queue<TreeNode> q, int ans, long maxiVal){
+        int level=1;
+        while(!q.isEmpty()){
+            int len= q.size();
+            long sum=0l;
+            for(int i=0; i<len; i++){
+                TreeNode node= q.poll();
+                sum= sum+ node.val;
+                if(node.left!=null) q.offer(node.left);
+                if(node.right!=null)    q.offer(node.right);
+            }
+            if(sum>maxiVal){
+                maxiVal=sum;
+                ans=level;
+            }
+            level++;
+        }
+        return ans;
+    }
+}
