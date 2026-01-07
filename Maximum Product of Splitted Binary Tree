@@ -1,0 +1,46 @@
+PROBLEM STATEMENT:
+Given the root of a binary tree, split the binary tree into two subtrees by removing one edge such that the product of the sums of the subtrees is maximized.
+
+Return the maximum product of the sums of the two subtrees. Since the answer may be too large, return it modulo 109 + 7.
+
+Note that you need to maximize the answer before taking the mod and not after taking it.
+
+SOLUTION:
+
+                                                                                                  TIME COMPLEXITY: O(N)
+                                                                                                  SPACE COMPLEXITY: O(N)
+
+
+class Solution {
+    long ans= Long.MIN_VALUE;
+    public int maxProduct(TreeNode root) {
+        long totalSum= findTotalSum(root);
+        long temp= dfs(root,totalSum);
+        return (int)(ans% 1_000_000_007);
+    }
+    public long findTotalSum(TreeNode root){
+        if(root.left==null && root.right==null) return root.val;
+        long sum=0l;
+        if(root.left!=null) sum+= findTotalSum(root.left);
+        if(root.right!=null)    sum+= findTotalSum(root.right);
+        return sum+root.val;
+    }
+    public long dfs(TreeNode root, long totalSum){
+        if(root==null)  return 0l;
+        if(root.left==null && root.right==null){    //root node
+            return root.val; 
+        }
+        long leftSum= dfs(root.left, totalSum);
+        long rightSum= dfs(root.right, totalSum);
+
+        long removeLeft=0l;
+        long removeRight=0l;
+        if(root.left!=null)
+        removeLeft= (totalSum-leftSum)*leftSum;
+        if(root.right!=null)
+        removeRight= (totalSum-rightSum)*rightSum;
+        ans= Math.max(ans, Math.max(removeLeft, removeRight));
+
+        return leftSum + rightSum + root.val;
+    }
+}
