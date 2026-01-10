@@ -1,0 +1,45 @@
+PROBLEM STATEMENT:
+Given two strings s1 and s2, return the lowest ASCII sum of deleted characters to make two strings equal.
+
+SOLUTION:
+
+                                                                                    TIME COMPLEXITY: O(n*m)
+                                                                                    SPACE COMPLEXITY: O(n*m)
+
+class Solution {
+    public int minimumDeleteSum(String s1, String s2) {
+        int n=s1.length(), m= s2.length();
+        int[][] dp= new int[n][m];
+        for(int i=0; i<n; i++){
+            Arrays.fill(dp[i],-1);
+        }
+
+        return f(n-1,m-1,s1,s2, dp);
+    }
+    public int f(int i, int j, String s1, String s2, int[][] dp){
+        if(i<0){
+            int sum=0;
+            for(int k=0; k<=j; k++){
+                sum+= s2.charAt(k);
+            }
+            return sum;
+        }
+        if(j<0){
+            int sum=0;
+            for(int k=0; k<=i; k++){
+                sum+= s1.charAt(k);
+            }
+            return sum;
+        }
+        if(dp[i][j]!= -1)   return dp[i][j];
+
+        long cost= Long.MAX_VALUE;
+        if(s1.charAt(i)== s2.charAt(j))     cost= Math.min(cost, f(i-1,j-1, s1,s2,dp));
+        else{
+            long cost1= (int)s1.charAt(i)+ f(i-1,j,s1,s2,dp);
+            long cost2= (int)s2.charAt(j)+f(i,j-1,s1,s2, dp);
+            cost= Math.min(cost1, cost2);
+        }
+        return dp[i][j]=(int)cost;
+    }
+}
