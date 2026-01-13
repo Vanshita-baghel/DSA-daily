@@ -1,0 +1,69 @@
+PROBLEM STATEMENT:
+You are given a 2D integer array squares. Each squares[i] = [xi, yi, li] represents the coordinates of the bottom-left point and the side length of a square parallel to the x-axis.
+
+Find the minimum y-coordinate value of a horizontal line such that the total area of the squares above the line equals the total area of the squares below the line.
+
+Answers within 10-5 of the actual answer will be accepted.
+
+Note: Squares may overlap. Overlapping areas should be counted multiple times.
+
+SOLUTION:
+
+                                                                                        TIME COMPLEXITY: O(n)
+                                                                                        SPACE COMPLEXITY: O(1)
+                                                                                        using binary search
+
+class Solution {
+    public double separateSquares(int[][] squares) {
+        int minY=Integer.MAX_VALUE, maxY=Integer.MIN_VALUE,n=squares.length;
+        
+        for(int i=0;i<n; i++){
+            int x=squares[i][0], y=squares[i][1], l=squares[i][2];
+            minY= Math.min(minY, y);
+            maxY= Math.max(maxY, y+l);
+        }
+
+        double l=minY,r=maxY;
+
+        for(int i=0; i<100; i++){
+            double mid= (l+r)/2.0;
+            double[] areaAboveBelow= findArea(squares,mid);
+            double aboveArea =areaAboveBelow[0];
+            double belowArea= areaAboveBelow[1];
+            if(aboveArea>belowArea){
+                l=mid;
+            }
+            else{
+                r= mid;
+            }
+        }
+        return (l+r)/2.0;
+    }
+    public double[] findArea(int[][] squares, double mid){
+        double[] ans= new double[2];
+
+        double above=0.0, below=0.0;
+        int n= squares.length;
+        for(int i=0; i<n; i++){
+            int y= squares[i][1];
+            int len= squares[i][2];
+            if(mid>=squares[i][1]+squares[i][2]){
+                below+= (double)squares[i][2]*squares[i][2];
+            }
+            else if(mid<= squares[i][1]){    //square lies above the mid
+                above+= (double)squares[i][2]*squares[i][2];
+            }
+            else{
+                //mid cuts the square in betwwen => two area->above and below
+                double b1= mid-squares[i][1];   //below the line
+                double b2= len-b1;                // above the line
+                above+= len*b2;
+                below+= len*b1;
+            }
+        }
+        ans[0]=above;
+        ans[1]= below;
+
+        return ans;
+    }
+}
