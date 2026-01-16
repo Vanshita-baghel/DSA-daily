@@ -1,0 +1,59 @@
+PROBLEM STATEMENT:
+
+There is a large (m - 1) x (n - 1) rectangular field with corners at (1, 1) and (m, n) containing some horizontal and vertical fences given in arrays hFences and vFences respectively.
+
+Horizontal fences are from the coordinates (hFences[i], 1) to (hFences[i], n) and vertical fences are from the coordinates (1, vFences[i]) to (m, vFences[i]).
+
+Return the maximum area of a square field that can be formed by removing some fences (possibly none) or -1 if it is impossible to make a square field.
+
+Since the answer may be large, return it modulo 109 + 7.
+
+Note: The field is surrounded by two horizontal fences from the coordinates (1, 1) to (1, n) and (m, 1) to (m, n) and two vertical fences from the coordinates (1, 1) to (m, 1) and (1, n) to (m, n). These fences cannot be removed.
+
+SOLUTION:
+
+                                                                                        TIME COMPLEXITY: O(h^2 + v^2),   h=hFences.length, v=vFences.length
+                                                                                        SPACE COMPLEXITY: O(h+v)
+
+class Solution {
+    private final int MOD= 1_000_000_007;
+    public int maximizeSquareArea(int m, int n, int[] hFences, int[] vFences) {
+        List<Integer> horizontal= new ArrayList<>();
+        horizontal.add(1);
+        for(int i=0; i<hFences.length; i++){
+            horizontal.add(hFences[i]);
+        }
+        horizontal.add(m);
+
+        List<Integer> vertical= new ArrayList<>();
+        vertical.add(1);
+        for(int i=0; i<vFences.length; i++){
+            vertical.add(vFences[i]);
+        }
+        vertical.add(n);
+
+        Collections.sort(horizontal);
+        Collections.sort(vertical);
+
+        HashSet<Integer> set= new HashSet<>();
+
+        for(int i=1; i<horizontal.size(); i++){
+            for(int j=i-1; j>=0; j--){
+                set.add(horizontal.get(i)-horizontal.get(j));
+            }
+        }
+
+        int maxSide= -1;
+
+        for(int i=1; i<vertical.size(); i++){
+            for(int j=i-1; j>=0; j--){
+                int diff= vertical.get(i)- vertical.get(j);
+                if(set.contains(diff)){
+                    maxSide= Math.max(maxSide, diff);
+                }
+            }
+        }
+
+        return maxSide==-1? -1: (int)((1l*maxSide*maxSide)%MOD);
+    }
+}
