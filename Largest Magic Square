@@ -1,0 +1,82 @@
+PROBLEM STATEMENT:
+
+A k x k magic square is a k x k grid filled with integers such that every row sum, every column sum, and both diagonal sums are all equal. The integers in the magic square do not have to be distinct. Every 1 x 1 grid is trivially a magic square.
+
+Given an m x n integer grid, return the size (i.e., the side length k) of the largest magic square that can be found within this grid.
+
+SOLUTION:
+
+                                                                                  TIME COMPLEXITY: O(O(m · n · min(m,n)²))
+                                                                                  SPACE COMPLEXITY: O(m · n)
+
+class Solution {
+    public int largestMagicSquare(int[][] grid) {
+        int m= grid.length, n= grid[0].length;
+
+        int[][] prefixRow= new int[m][n];
+        for(int i=0; i<m; i++){
+            prefixRow[i][0]= grid[i][0];
+            for(int j=1; j<n; j++){
+                prefixRow[i][j]= prefixRow[i][j-1]+ grid[i][j];
+            }
+        }
+        int[][] prefixCol= new int[m][n];
+        for(int j=0; j<n; j++){
+            prefixCol[0][j]= grid[0][j];
+            for(int i=1; i<m; i++){
+                prefixCol[i][j]=grid[i][j]+ prefixCol[i-1][j];
+            }
+        }
+
+        for(int i=Math.min(m,n); i>1; i--){
+            if(isValid(i,prefixRow, prefixCol, grid))   return i;
+        }
+        return 1;
+    }
+    public boolean isValid(int size, int[][] prefixRow, int[][] prefixCol, int[][] grid) {
+        int m = grid.length, n = grid[0].length;
+
+        for (int i = 0; i + size - 1 < m; i++) {
+            for (int j = 0; j + size - 1 < n; j++) {
+
+                int target = rowSum(i, j, j + size - 1, prefixRow);
+
+                // check all rows
+                boolean ok = true;
+                for (int r = i; r < i + size; r++) {
+                    if (rowSum(r, j, j + size - 1, prefixRow) != target) {
+                        ok = false;
+                        break;
+                    }
+                }
+                if (!ok) continue;
+
+                // check all columns
+                for (int c = j; c < j + size; c++) {
+                    if (colSum(c, i, i + size - 1, prefixCol) != target) {
+                        ok = false;
+                        break;
+                    }
+                }
+                if (!ok) continue;
+
+                // check diagonals
+                int d1 = 0, d2 = 0;
+                for (int k = 0; k < size; k++) {
+                    d1 += grid[i + k][j + k];
+                    d2 += grid[i + k][j + size - 1 - k];
+                }
+
+                if (d1 == target && d2 == target) return true;
+            }
+        }
+        return false;
+    }
+
+    public int rowSum(int r, int c1, int c2, int[][]prefixRow){
+        return c1==0? prefixRow[r][c2] : prefixRow[r][c2]-prefixRow[r][c1-1];
+    }
+    public int colSum(int c, int r1, int r2, int[][] prefixCol){
+        return r1==0? prefixCol[r2][c] : prefixCol[r2][c]-prefixCol[r1-1][c];
+    }
+}
