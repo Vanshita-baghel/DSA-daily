@@ -1,0 +1,55 @@
+PROBLEM STATEMENT:
+
+You are given an integer array nums of length n.
+
+An array is trionic if there exist indices 0 < p < q < n − 1 such that:
+
+nums[0...p] is strictly increasing,
+nums[p...q] is strictly decreasing,
+nums[q...n − 1] is strictly increasing.
+Return true if nums is trionic, otherwise return false.
+
+
+
+SOLUTION:
+                                                                                  TIME COMPLEXITY: O(n)
+                                                                                  SPACE COMPLEXITY: O(1)
+
+class Solution {
+    public boolean isTrionic(int[] nums) {
+        int n=nums.length;
+        if(n==3)    return false;
+        int p= posSlope(0,nums);
+        if(p>=n-1 || p==0)  return false;
+
+        int q= negSlope(p,nums);
+        if(q>=n-1)  return false;
+
+        boolean flag= isIncreasing(q, nums);
+
+        return flag;
+
+    }
+    private int posSlope(int ind, int[] nums){
+        int i=ind, n=nums.length;
+        while(i<n-1 && nums[i]<nums[i+1]){
+            i++;
+        }
+        return i;
+    }
+
+    private int negSlope(int ind, int[] nums){
+        int i=ind, n=nums.length;
+        while(i<n-1 && nums[i]>nums[i+1])   i++;
+        return i;
+    }
+
+    private boolean isIncreasing(int ind, int[] nums){
+        int i=ind, n=nums.length;
+        while(i<n-1){
+            if(nums[i]>=nums[i+1])  return false;
+            i++;
+        }
+        return true;
+    }
+}
