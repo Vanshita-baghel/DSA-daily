@@ -1,0 +1,27 @@
+PRBOLEM STATEMENT:
+Given a binary tree, determine if it is height-balanced.
+
+SOLUTION:
+
+                                                                        TIME COMPLEXITY: O(n)
+                                                                        SPACE COMPLEXITY: O(h)
+
+class Solution {
+    boolean ans=true;
+    public boolean isBalanced(TreeNode root) {
+        
+        solve(root);
+        return ans;
+    }
+    public int solve(TreeNode root){
+        if(root==null)  return 0;
+        if(root.left==null && root.right==null) return 1;
+        int left= solve(root.left);
+        int right= solve(root.right);
+
+        if(Math.abs(left-right) >1 ){
+            ans=false; 
+        }  
+        return 1+ Math.max(left, right);
+    }
+}
