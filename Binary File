@@ -1,0 +1,50 @@
+PROBLEM STATEMENT:
+A binary watch has 4 LEDs on the top to represent the hours (0-11), and 6 LEDs on the bottom to represent the minutes (0-59). Each LED represents a zero or one, with the least significant bit on the right.
+
+For example, the below binary watch reads "4:51".
+Given an integer turnedOn which represents the number of LEDs that are currently on (ignoring the PM), return all possible times the watch could represent. You may return the answer in any order.
+
+The hour must not contain a leading zero.
+
+For example, "01:00" is not valid. It should be "1:00".
+The minute must consist of two digits and may contain a leading zero.
+
+For example, "10:2" is not valid. It should be "10:02".
+
+
+SOLUTION:
+
+                                                                                  TIME COMPLEXITY: O(1)
+                                                                                  SPACE COMPLEXITY: O(1)
+
+class Solution {
+    public List<String> readBinaryWatch(int turnedOn) {
+        List<String> res= new ArrayList<>();
+
+        for(int i=0; i<=11; i++){
+            int hourBits= cntBits(i);
+            for(int j=0; j<60; j++){
+                int minBits= cntBits(j);
+                if(hourBits+minBits == turnedOn){
+                    String temp="";
+                    String hour= Integer.toString(i);
+                    String min= Integer.toString(j);
+                    temp= temp+hour;
+                    if(min.length()==1){
+                        min= "0"+min;
+                    }
+                    temp= temp+":"+min;
+                    res.add(temp);
+                }
+            }
+        }
+        return res;
+    }
+    public int cntBits(int num){
+        int cnt=0;
+        for(int i=0; i<32; i++){
+            if((num&(1<<i))!= 0)  cnt++;
+        }
+        return cnt;
+    }
+}
