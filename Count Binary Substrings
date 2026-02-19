@@ -1,0 +1,25 @@
+PROBLEM STATEMENT:
+Given a binary string s, return the number of non-empty substrings that have the same number of 0's and 1's, and all the 0's and all the 1's in these substrings are grouped consecutively.
+
+Substrings that occur multiple times are counted the number of times they occur.
+
+
+SOLUTION:
+                                                                                TIME COMPLEXITY: O(n)
+                                                                                SPACE COMPLEXITY: O(1)
+class Solution {
+    public int countBinarySubstrings(String s) {
+        int cnt=0;
+        int prev=0, cur=1, n=s.length();
+        for(int i=1; i<n; i++){
+            if(s.charAt(i)==s.charAt(i-1))  cur++;
+            else{
+                cnt+= Math.min(cur, prev);
+                prev=cur;
+                cur=1;
+            }
+        }
+        cnt+= Math.min(cur, prev);
+        return cnt;
+    }
+}
