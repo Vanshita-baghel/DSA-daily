@@ -1,0 +1,16 @@
+PROBLEM STATEMENT:
+Given a binary string s and an integer k, return true if every binary code of length k is a substring of s. Otherwise, return false.
+
+SOLUTION:
+                                                                                TIME CCOMPLEXITY: O(n)
+                                                                                SPACE COMPLEXITY: O(min(n, 2^k) × k)
+class Solution {
+    public boolean hasAllCodes(String s, int k) {
+        if(s.length()<k)    return false;
+        HashSet<String> set= new HashSet<>();
+        for(int i=0; i<=s.length()-k; i++){
+            set.add(s.substring(i,i+k));
+        }
+        return set.size()== (1<<k);
+    }
+}
