@@ -1,0 +1,18 @@
+PROBLEM STATEMENT:
+Given an integer n, return the decimal value of the binary string formed by concatenating the binary representations of 1 to n in order, modulo 109 + 7.
+
+SOLUTION:
+                                                                              TIME COMPELXITY: O(n)
+                                                                              SPACE COMPLEXITY: O(1)
+class Solution {
+    private static int mod= 1_000_000_007;
+    public int concatenatedBinary(int n) {
+        long res=0;
+        int digits=0;
+        for(int num=1; num<=n; num++){
+            if((num&(num-1)) ==0)   digits++;
+            res= ((res<<digits)%mod+num)%mod;
+        }
+        return (int)res;
+    }
+}
