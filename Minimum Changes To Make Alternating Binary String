@@ -1,0 +1,47 @@
+PROBLEM STATEMENT:
+You are given a string s consisting only of the characters '0' and '1'. In one operation, you can change any '0' to '1' or vice versa.
+
+The string is called alternating if no two adjacent characters are equal. For example, the string "010" is alternating, while the string "0100" is not.
+
+Return the minimum number of operations needed to make s alternating.
+
+
+SOLUTION:
+
+                                                        TIME COMPLEXITY: O(N)
+                                                        SPACE COMPLEXITY: O(N)
+
+class Solution {
+    public int minOperations(String s) {
+        StringBuilder sb0= new StringBuilder();
+        StringBuilder sb1= new StringBuilder();
+        int n= s.length();
+        boolean flag= true;
+        for(int i=0; i<n; i++){
+            if(flag){
+                sb0.append('0');
+                sb1.append('1');
+            }
+            else{
+                sb0.append('1');
+                sb1.append('0');
+            }
+            flag= !flag;
+        }
+        System.out.println(sb0);
+        System.out.println(sb1);
+        int cnt0=0, cnt1=0;
+        for(int i=0; i<n; i++){
+            char ch0= sb0.charAt(i);
+            char ch1= sb1.charAt(i);
+            char ch= s.charAt(i);
+            if(ch0!= ch){
+                cnt0++;
+            }
+            if(ch1!= ch){
+                cnt1++;
+            }
+        }
+        return Math.min(cnt0, cnt1);
+    }
+}
