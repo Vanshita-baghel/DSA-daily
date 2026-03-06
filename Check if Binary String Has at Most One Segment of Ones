@@ -1,0 +1,22 @@
+PROBLEM STATEMENT:
+Given a binary string s ​​​​​without leading zeros, return true​​​ if s contains at most one contiguous segment of ones. Otherwise, return false.
+
+SOLUTION:
+                                                          TIME COMPLEXITY: O(N)
+                                                          SPACE COMPLEXITY: O(1)
+class Solution {
+    public boolean checkOnesSegment(String s) {
+        int cnt=0;
+        int i=0;
+        int n= s.length();
+        while(i<n){
+            char ch= s.charAt(i);
+            if(ch=='1'){
+                cnt++;
+                while(i<n && s.charAt(i)=='1') i++;
+            }
+            i++;
+        }
+        return cnt<=1;
+    }
+}
