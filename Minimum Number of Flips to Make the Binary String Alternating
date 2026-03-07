@@ -1,0 +1,56 @@
+PROBLEM STATEMENT:
+You are given a binary string s. You are allowed to perform two types of operations on the string in any sequence:
+
+Type-1: Remove the character at the start of the string s and append it to the end of the string.
+Type-2: Pick any character in s and flip its value, i.e., if its value is '0' it becomes '1' and vice-versa.
+Return the minimum number of type-2 operations you need to perform such that s becomes alternating.
+
+The string is called alternating if no two adjacent characters are equal.
+
+For example, the strings "010" and "1010" are alternating, while the string "0100" is not.
+
+SOLUTION:
+
+                                              TIME COMPLEXITY: O(n)
+                                              SPACE COMPLEXITY: O(2*n)
+
+class Solution {
+    public int minFlips(String s) {
+        StringBuilder sb= new StringBuilder(s);
+        sb.append(s);
+        int n= s.length();
+        StringBuilder s0= new StringBuilder();
+        StringBuilder s1= new StringBuilder();
+        boolean flag= true;
+        for(int i=0; i<2*s.length(); i++){
+            if(flag){
+                s0.append('0');
+                s1.append('1');
+            }
+            else{
+                s0.append('1');
+                s1.append('0');
+            }
+            flag = !flag;
+        }
+
+        int i=0, j=0;
+        int minFlips=Integer.MAX_VALUE;
+        int cnt0=0, cnt1=0;
+        
+        while(j<2*n){
+            if(sb.charAt(j)!= s0.charAt(j)) cnt0++;
+            if(sb.charAt(j)!= s1.charAt(j)) cnt1++;
+            if(j-i+1>n){
+                if(sb.charAt(i)!= s0.charAt(i)) cnt0--;
+                if(sb.charAt(i)!= s1.charAt(i)) cnt1--;
+                i++;
+            }
+            if(j-i+1==n){
+                minFlips= Math.min(minFlips, Math.min(cnt0, cnt1));
+            }
+            j++;
+        }
+        return minFlips;
+    }
+}
