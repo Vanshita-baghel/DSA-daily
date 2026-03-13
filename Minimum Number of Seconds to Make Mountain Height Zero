@@ -1,0 +1,48 @@
+PROBLEM STATEMENT:
+You are given an integer mountainHeight denoting the height of a mountain.
+
+You are also given an integer array workerTimes representing the work time of workers in seconds.
+
+The workers work simultaneously to reduce the height of the mountain. For worker i:
+
+To decrease the mountain's height by x, it takes workerTimes[i] + workerTimes[i] * 2 + ... + workerTimes[i] * x seconds. For example:
+To reduce the height of the mountain by 1, it takes workerTimes[i] seconds.
+To reduce the height of the mountain by 2, it takes workerTimes[i] + workerTimes[i] * 2 seconds, and so on.
+Return an integer representing the minimum number of seconds required for the workers to make the height of the mountain 0.
+
+SOLUTION:
+
+                                                  TIME COMPLEXITY:O(n logr)
+                                                  SPACE COMPLEXITY: O(1)
+
+class Solution {
+    public long minNumberOfSeconds(int mountainHeight, int[] workerTimes) {
+        long l=1;
+        long r=0l;
+        int n=workerTimes.length;
+        long h= ((long)mountainHeight*(mountainHeight+1))/2l;
+        for(int i=0; i<n; i++){
+            int t =workerTimes[i];
+            r=Math.max(r, t*h);
+        }
+
+        while(l<=r){
+            long mid= (l+r)/2l;
+            if(check(mid, mountainHeight, workerTimes)){
+                r=mid-1;
+            }
+            else{
+                l=mid+1;
+            }
+        }
+        return l;
+    }
+    public boolean check(long mid, int mH, int[] workerTime){
+        long h=0l;
+        for(int t: workerTime){
+            h+= (long)(Math.sqrt(2.0*mid/t+0.25)-0.5);
+            if(h>=mH)   return true;
+        }
+        return h>=mH;
+    }
+}
