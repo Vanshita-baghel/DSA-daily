@@ -1,0 +1,38 @@
+PROBLEM STATEMENT:
+Given two n x n binary matrices mat and target, return true if it is possible to make mat equal to target by rotating mat in 90-degree increments, or false otherwise.
+
+SOLUTION:
+
+                                                      TIME COMPLEXITY: O(n*n)
+                                                      SPACE COMPLEXITY: O(n*n)
+
+class Solution {
+    public boolean findRotation(int[][] mat, int[][] target) {
+        if(compare(mat, target))    return true;
+
+        for(int k=0; k<3; k++){
+            mat= rotate(mat);
+            if(compare(mat, target))    return true;
+        }
+
+        return false;
+
+    }
+    public boolean compare(int[][] mat, int[][] target){
+        int m= mat.length, n=mat[0].length;
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++)  if(mat[i][j]!=target[i][j]) return false;
+        }
+        return true;
+    }
+    public int[][] rotate(int[][] mat){
+        int m= mat.length, n= mat[0].length;
+        int[][] res= new int[m][n];
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++){
+                res[n-j-1][i]= mat[i][j];
+            }
+        }
+        return res;
+    }
+}
